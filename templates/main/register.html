@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+
+{% block title %} Register {% endblock %}
+
+{% block content %}  
+    
+    
+    <div class="container mt-5 mb-5">
+        <div class="row">
+            <div class="container col-sm-6 col-xs-12">
+                <h3>Register</h3>
+            </div>
+        </div>
+        <div class="row">
+            <div class="container col-sm-6 col-xs-12">
+                <form action="#" method="post" autocomplete="off">
+                    {% csrf_token %}
+                    <div class="row ">
+                        <div class="input-group mb-3">
+                            <span class="input-group-text" id="basic-addon1">Email</span>
+                            {{form.email}}
+                        </div>
+                    </div>
+                    <div class="row ">
+                        <div class="input-group mb-3">
+                            <span class="input-group-text" id="basic-addon1">User Name</span>
+                            {{form.user_name}}
+                        </div>
+                    </div>
+                    <div class="row ">
+                        <div class="input-group mb-3">
+                            <span class="input-group-text" id="basic-addon1">First Name</span>
+                            {{form.first_name}}
+                        </div>
+                    </div>
+                    <div class="row ">
+                        <div class="input-group mb-3">
+                            <span class="input-group-text" id="basic-addon1">Last Name</span>
+                            {{form.last_name}}
+                        </div>
+                    </div>
+                    <div class="row ">
+                        <div class="input-group mb-3">
+                            <span class="input-group-text" id="basic-addon1">Address</span>
+                            {{form.address}}
+                        </div>
+                    </div>
+                    <div class="row ">
+                        <div class="input-group mb-3">
+                            <span class="input-group-text" id="basic-addon1">Phone</span>
+                            {{form.phone_number}}
+                        </div>
+                    </div>
+                    <div class="row ">
+                        <div class="input-group mb-3">
+                            <span class="input-group-text" id="basic-addon1">Password</span>
+                            {{form.password1}}
+                        </div>
+                    </div>
+                    <div class="row ">
+                        <div class="input-group mb-3">
+                            <span class="input-group-text" id="basic-addon1">Confirm Password</span>
+                            {{form.password2}}
+                        </div>
+                    </div>
+                    <div class="row ">
+                        <div class="input-group mb-3">
+                            <span class="input-group-text" id="basic-addon1">Confirm Password</span>
+                            {{form.section}}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group">
+                            <div class="d-grid gap-2 ">
+                                <button type="submit " class="btn btn-primary btn-block btn-lg">Register</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <div class="form-group mt-2">
+                    <div class="p">Already a member? <a href="{% url 'login' %}">Login</a></div>
+                </div>
+            
+        </div>
+        
+    </div>
+
+    
+        
+        
+        
+       
+        
+        
+        
+        
+        
+        
+    
+{% endblock %}

@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+{% load extras %}
+
+{% block title %} {{req.Control_Number}} {% endblock %}
+
+{% block content %}
+    <div class="card">
+        <h2 class="card-header">Order By:  {{req.customer_id.name}}</h3>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-sm-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h3 class="card-title">Customer Details</h3>
+                            <hr>
+                            <p> <b> Phone Number:</b> {{req.customer_id.phone_number}}</p>
+                            <hr>
+                            <p><b>Email:</b> {{req.customer_id.email}}</p>
+                        </div>
+                    </div>
+                    {% if user.is_staff %}
+                    <div class="card mt-3">
+                        <div class="card-body">
+                            {% if req.id|checkStorage == True and req.status == 'A'%}
+                                <p class="text-center">Order is ready to be accepted</p>
+                                <div class="d-grid gap-2 ">
+                                    <a href="{% url 'acceptOrder' req.id %}" class="btn btn-outline-info btn-lg">Accept</a>
+                                </div>
+                            {% elif req.status == 'B'%}
+                                <div class="d-grid gap-2 ">
+                                    <a href="{% url 'updatePart' req.id %}" class="btn btn-outline-warning btn-lg">Partially Deliver</a>
+                                </div>
+                                <div class="d-grid gap-2 mt-2">
+                                    <a href="{% url 'updateFull' req.id %}" class="btn btn-outline-success btn-lg">Deliver All</a>
+                                </div>
+                            {% elif req.status == 'C'%}
+                                <div class="d-grid gap-2">
+                                    <a href="{% url 'updateFull' req.id %}" class="btn btn-outline-success btn-lg">Deliver All</a>
+                                </div>
+                            {% elif req.status == 'D'%}
+                                <p style="color: seagreen;" class="text-center">This Order is complete and delivered</p>
+                            {% else  %}
+                                <p style="color: red;" class="text-center">Cant supply Customer demand</p>
+                                <div class="d-grid gap-2 ">
+                                    <button type="submit " class="btn btn-outline-primary btn-lg" disabled>Accept</button>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="col-sm-9">
+                    <div class="container">
+                        <div class="row">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h3 class="card-title">Product Details</h3>
+                                    <hr>
+                                    <p> <b>Name:</b>  {{req.Item.name}}</p>
+                                    <hr>
+                                    <p> <b>Description:</b>  {{req.Item.name}}</p>
+                                    <hr>
+                                    <p> <b>Price:</b>  {{req.Item.price}}</p>
+                                    <hr>
+                                    <p> <b>Unit of Measurement:</b>  {{req.Item.unit_of_measurement}}</p>
+                                    <hr>
+                                    <p> <b>Stock Quantity:</b>  {{req.Item.stock_quantity}}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-1">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h3 class="card-title">Order Details</h3>
+                                    <hr>
+                                    <p> <b>Date Ordered:</b>  {{req.Date}}</p>
+                                    <hr>
+                                    <p> <b>Control Number:</b>  {{req.Control_Number}}</p>
+                                    <hr>
+                                    <p> <b>Section:</b>  {{req.Section}}</p>
+                                    <hr>
+                                    <p> <b>Quantity Needed:</b>  {{req.Qty}}</p>
+                                    <hr>
+                                    {% if req.status == 'A' %}
+                                        <p> <b>Current Status:</b>  Pending</p>
+                                        <hr>
+                                    {%elif req.status == 'B' %}
+                                        <p> <b>Current Status:</b>  Accepted</p>
+                                        <hr>
+                                    {%elif req.status == 'C' %}
+                                        <p> <b>Current Status:</b>  Partially Delivered</p>
+                                        <hr>
+                                    {%elif req.status == 'D' %}
+                                        <p> <b>Current Status:</b>  Delivered</p>
+                                        <hr>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block title %} Product {% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md">
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="card-title">Products</h3>
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Product Name</th>
+                                <th>Product Stock quantity</th>
+                                <th>UOM</th>
+                                <th>Price</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if prods %}
+                                {% for prod in prods %}
+                                    <tr>
+                                        <td>{{prod.name}}</td>
+                                        <td>{{prod.stock_quantity}}</td>
+                                        <th>{{prod.unit_of_measurement}}</th>
+                                        <td>{{prod.price}}</td>
+                                    </tr>
+                                {% endfor %}
+                            {% endif %}
+                            
+                        </tbody>
+                    </table>
+                    
+                    <div aria-label="Page navigation example">
+                        <ul class="step-links pagination justify-content-center mt-3">
+                            {% if prods.has_previous %}
+                                <li class="page-item"><a href="?page=1" class="page-link">&laquo; first</a></li>
+                                <li class="page-item"><a href="?page={{ prods.previous_page_number }}" class="page-link">previous</a></li>
+                            {% endif %}
+                    
+                            <li class="current page-item">
+                                Page {{ prods.number }} of {{ prods.paginator.num_pages }}.
+                            </li>
+                    
+                            {% if prods.has_next %}
+                                <li class="page-item"><a href="?page={{ prods.next_page_number }}" class="page-link">next</a></li>
+                                <li class="page-item"><a href="?page={{ prods.paginator.num_pages }}" class="page-link">last &raquo;</a></li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

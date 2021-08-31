@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% load extras %}
+{% block title %} Orders {% endblock %}
+
+{% block content %}
+    <h1>Dashboard</h1>
+    <div class="container">
+        <div class="row mt-3">
+            <div class="col-sm">
+                <div class="card">
+                    <div class="card-body">
+                        <h5>Orders</h5>
+                        <div class="col-md">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Customer</th>
+                                        <th>Item</th>
+                                        <th>Total</th>
+                                        <th>Status</th>
+                                        <th>Control Number</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {%for req in reqs%}
+                                    <tr>
+                                        <td>{{req.customer_id}}</td>
+                                        <td>{{req.Qty}} {{req.Item.unit_of_measurement}} of {{req.Item}}</td>
+                                        <td>{{req.id|calc}}</td>
+                                        {% if req.status == 'A' %}
+                                            <td><span class="badge bg-dark">Pending</span></td>
+                                        {%elif req.status == 'B' %}
+                                            <td><span class="badge bg-info">Accepted</span></td>
+                                        {%elif req.status == 'C' %}
+                                            <td><span class="badge bg-warning">Partially Delivered</span></td>
+                                        {%elif req.status == 'D' %}
+                                            <td><span class="badge bg-success">Delivered</span></td>
+                                        {% endif %}
+                                        <td>{{req.Control_Number}}</td>
+
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                                
+                            </table>
+                            <div aria-label="Page navigation example">
+                                <ul class="step-links pagination justify-content-center mt-3">
+                                    {% if reqs.has_previous %}
+                                        <li class="page-item"><a href="?page=1" class="page-link">&laquo; first</a></li>
+                                        <li class="page-item"><a href="?page={{ reqs.previous_page_number }}" class="page-link">previous</a></li>
+                                    {% endif %}
+                            
+                                    <li class="current page-item">
+                                        Page {{ reqs.number }} of {{ reqs.paginator.num_pages }}.
+                                    </li>
+                            
+                                    {% if reqs.has_next %}
+                                        <li class="page-item"><a href="?page={{ reqs.next_page_number }}" class="page-link">next</a></li>
+                                        <li class="page-item"><a href="?page={{ reqs.paginator.num_pages }}" class="page-link">last &raquo;</a></li>
+                                    {% endif %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,156 @@
+{% extends 'base.html' %}
+{% load extras %}
+{% block title %} Customers {% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-body">
+                        <h5>Orders</h5>
+                        <div class="col-md">
+                            <form method="get">
+                                <div class="input-group mb-3">
+                                    <input type="text" class="form-control" placeholder=" Search Control Number" aria-label="Control Number" aria-describedby="button-addon2" name="control_number">
+                                    <button class="btn btn-outline-secondary" type="submit" id="control_number">Search</button>
+                                </div>
+                            </form>
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Customer</th>
+                                        <th>Item</th>
+                                        <th>Total</th>
+                                        <th>Status</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {%for req in reqs%}
+                                    <tr>
+                                        <td>{{req.customer_id}}</td>
+                                        <td>{{req.Qty}} {{req.Item.unit_of_measurement}} of {{req.Item}}</td>
+                                        <td>{{req.id|calc}}</td>
+                                        {% if req.status == 'A' %}
+                                            <td><span class="badge bg-dark">Pending</span></td>
+                                        {%elif req.status == 'B' %}
+                                            <td><span class="badge bg-info">Accepted</span></td>
+                                        {%elif req.status == 'C' %}
+                                            <td><span class="badge bg-warning">Partially Delivered</span></td>
+                                        {%elif req.status == 'D' %}
+                                            <td><span class="badge bg-success">Delivered</span></td>
+                                        {% endif %}
+                                        <td>
+                                            <div class="d-grid gap-2 ">
+                                                <a href="{% url 'details' req.id %}" class="btn btn-outline-secondary">Details</a>
+                                            </div>
+                                        </td>
+
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                                
+                            </table>
+                            <div aria-label="Page navigation example">
+                                <ul class="step-links pagination justify-content-center mt-3">
+                                    {% if reqs.has_previous %}
+                                        <li class="page-item"><a href="?page=1" class="page-link">&laquo; first</a></li>
+                                        <li class="page-item"><a href="?page={{ reqs.previous_page_number }}" class="page-link">previous</a></li>
+                                    {% endif %}
+                            
+                                    <li class="current page-item">
+                                        Page {{ reqs.number }} of {{ reqs.paginator.num_pages }}.
+                                    </li>
+                            
+                                    {% if reqs.has_next %}
+                                        <li class="page-item"><a href="?page={{ reqs.next_page_number }}" class="page-link">next</a></li>
+                                        <li class="page-item"><a href="?page={{ reqs.paginator.num_pages }}" class="page-link">last &raquo;</a></li>
+                                    {% endif %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                {% if user.is_staff is True %}
+                <div class="row">
+                    <div class="card">
+                        <div class="card-body">
+                            <form method="post" autocomplete="off">
+                                {% csrf_token %}
+                                {{form.customer_id.errors}}
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text" id="inputGroup-sizing-default">Customer:</span>
+                                    {{ form.customer_id }}
+                                </div>
+                        
+                                {{form.Control_Number.errors}}
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text" id="inputGroup-sizing-default">Control Number:</span>
+                                    {{ form.Control_Number }}
+                                </div>
+                        
+                                {{form.Section.errors}}
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text" id="inputGroup-sizing-default">Section:</span>
+                                    {{ form.Section }}
+                                </div>
+                        
+                                {{form.Item.errors}}
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text" id="inputGroup-sizing-default">Item:</span>
+                                    {{ form.Item }}
+                                </div>
+                        
+                                {{form.Qty.errors}}
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text" id="inputGroup-sizing-default">Quantity:</span>
+                                    {{ form.Qty }}
+                                </div>
+                        
+                                <div class="row">
+                                    <div class="form-group">
+                                        <div class="d-grid gap-2 ">
+                                            <button type="submit " class="btn btn-primary btn-block btn-lg">Submit</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                <div class="row mt-1">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row mt-1">
+                                <div class="d-grid gap-2 ">
+                                    <a href="{% url 'pending' %}" class="btn btn-dark btn-block btn-lg">Pending</a>
+                                </div>
+                            </div>
+                            <div class="row mt-1">
+                                <div class="d-grid gap-2 ">
+                                    <a href="{% url 'accepted' %}" class="btn btn-dark btn-block btn-lg">Accepted</a>
+                                </div>
+                            </div>
+                            <div class="row mt-1">
+                                <div class="d-grid gap-2 ">
+                                    <a href="{% url 'partial' %}" class="btn btn-dark btn-block btn-lg">Partially Delivered</a>
+                                </div>
+                            </div>
+                            <div class="row mt-1">
+                                <div class="d-grid gap-2 ">
+                                    <a href="{% url 'delivered' %}" class="btn btn-dark btn-block btn-lg">Delivered</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+    
+{% endblock %}

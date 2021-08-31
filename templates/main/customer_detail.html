@@ -1,0 +1,161 @@
+{% extends 'base.html' %}
+{% load extras %}
+{% block title %} {{cust.name}} {% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-sm-3">
+        <div class="row">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Profile</h4>
+                    <div class="col-sm">
+                        <p>Name: {{cust.name}}</p>
+                    </div>
+                    <div class="col-sm">
+                        <p>Email: {{cust.email}}</p>
+                    </div>
+                    <div class="col-sm">
+                        <p>Phone Number: {{cust.phone_number}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-9">
+        <div class="row">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Pending Orders</h4>
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Item</th>
+                                <th>Total</th>
+                                <th>Control Number</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {%for pend in pends%}
+                            <tr>
+                                <td>{{pend.Qty}} {{pend.Item.unit_of_measurement}} of {{pend.Item}}</td>
+                                <td>{{pend.id|calc}}</td>
+                                <td>{{pend.Control_Number}}</td>
+                                <td>
+                                    <div class="d-grid gap-2 ">
+                                        <a href="{% url 'details' pend.id %}" class="btn btn-outline-secondary">Details</a>
+                                    </div>
+                                </td>
+
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-2">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Accepted Orders</h4>
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Item</th>
+                                <th>Total</th>
+                                <th>Control Number</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {%for pend in acpts%}
+                            <tr>
+                                <td>{{pend.Qty}} {{pend.Item.unit_of_measurement}} of {{pend.Item}}</td>
+                                <td>{{pend.id|calc}}</td>
+                                <td>{{pend.Control_Number}}</td>
+                                <td>
+                                    <div class="d-grid gap-2 ">
+                                        <a href="{% url 'details' pend.id %}" class="btn btn-outline-secondary">Details</a>
+                                    </div>
+                                </td>
+
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-2">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Partially Delivered Orders</h4>
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Item</th>
+                                <th>Total</th>
+                                <th>Control Number</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {%for pend in parts%}
+                            <tr>
+                                <td>{{pend.Qty}} {{pend.Item.unit_of_measurement}} of {{pend.Item}}</td>
+                                <td>{{pend.id|calc}}</td>
+                                <td>{{pend.Control_Number}}</td>
+                                <td>
+                                    <div class="d-grid gap-2 ">
+                                        <a href="{% url 'details' pend.id %}" class="btn btn-outline-secondary">Details</a>
+                                    </div>
+                                </td>
+
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-2">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Delivered Orders</h4>
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Item</th>
+                                <th>Total</th>
+                                <th>Control Number</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {%for pend in delis%}
+                            <tr>
+                                <td>{{pend.Qty}} {{pend.Item.unit_of_measurement}} of {{pend.Item}}</td>
+                                <td>{{pend.id|calc}}</td>
+                                <td>{{pend.Control_Number}}</td>
+                                <td>
+                                    <div class="d-grid gap-2 ">
+                                        <a href="{% url 'details' pend.id %}" class="btn btn-outline-secondary">Details</a>
+                                    </div>
+                                </td>
+
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    
+{% endblock %}

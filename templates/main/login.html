@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block title %} Login {% endblock %}
+
+{% block content %}  
+
+<div class="container mt-5 mb-5">
+    <div class="row ">
+        <h1 class="text-center">WELCOME TO <b>RTI</b> INVENTORY SYSTEM</h1>
+        <div class="container col-sm-6 col-xs-12 mt-5">
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="card-title text-center"> Log In</h3>
+                    <div class="card-text">
+                        <form method="post" autocomplete="off" >
+                            {% csrf_token %}
+                            <div class="form-floating mb-3">
+                                <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com" name="email">
+                                <label for="floatingInput">Email address</label>
+                              </div>
+                              <div class="form-floating">
+                                <input type="password" class="form-control" id="floatingPassword" placeholder="Password" name="password">
+                                <label for="floatingPassword">Password</label>
+                              </div>
+                              <div class="form-group">
+                                <div class="d-grid gap-2">
+                                    <button type="submit" class="btn btn-primary btn-block mt-3">Sign in</button>
+                                </div>
+                                
+                              </div>
+                              
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+</div>
+        
+    
+{% endblock %}
