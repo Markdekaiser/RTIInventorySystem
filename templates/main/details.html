@@ -8,7 +8,7 @@
         <h2 class="card-header">Order By:  {{req.customer_id.name}}</h3>
         <div class="card-body">
             <div class="row">
-                <div class="col-sm-3">
+                <div class="col-sm-5">
                     <div class="card">
                         <div class="card-body">
                             <h3 class="card-title">Customer Details</h3>
@@ -19,37 +19,63 @@
                         </div>
                     </div>
                     {% if user.is_staff %}
-                    <div class="card mt-3">
-                        <div class="card-body">
-                            {% if req.id|checkStorage == True and req.status == 'A'%}
-                                <p class="text-center">Order is ready to be accepted</p>
-                                <div class="d-grid gap-2 ">
-                                    <a href="{% url 'acceptOrder' req.id %}" class="btn btn-outline-info btn-lg">Accept</a>
-                                </div>
-                            {% elif req.status == 'B'%}
-                                <div class="d-grid gap-2 ">
-                                    <a href="{% url 'updatePart' req.id %}" class="btn btn-outline-warning btn-lg">Partially Deliver</a>
-                                </div>
-                                <div class="d-grid gap-2 mt-2">
-                                    <a href="{% url 'updateFull' req.id %}" class="btn btn-outline-success btn-lg">Deliver All</a>
-                                </div>
-                            {% elif req.status == 'C'%}
-                                <div class="d-grid gap-2">
-                                    <a href="{% url 'updateFull' req.id %}" class="btn btn-outline-success btn-lg">Deliver All</a>
-                                </div>
-                            {% elif req.status == 'D'%}
-                                <p style="color: seagreen;" class="text-center">This Order is complete and delivered</p>
-                            {% else  %}
-                                <p style="color: red;" class="text-center">Cant supply Customer demand</p>
-                                <div class="d-grid gap-2 ">
-                                    <button type="submit " class="btn btn-outline-primary btn-lg" disabled>Accept</button>
-                                </div>
-                            {% endif %}
+                        <div class="card mt-3">
+                            <div class="card-body">
+                                {% if req.id|checkStorage == True and req.status == 'A'%}
+                                    <p class="text-center">Order is ready to be accepted</p>
+                                    <div class="d-grid gap-2 ">
+                                        <a href="{% url 'acceptOrder' req.id %}" class="btn btn-outline-info btn-lg">Accept</a>
+                                    </div>
+                                {% elif req.status == 'B'%}
+                                    <div class="d-grid gap-2 ">
+                                        <a href="{% url 'updatePart' req.id %}" class="btn btn-outline-warning btn-lg">Partially Deliver</a>
+                                    </div>
+                                    <div class="d-grid gap-2 mt-2">
+                                        <a href="{% url 'updateFull' req.id %}" class="btn btn-outline-success btn-lg">Deliver All</a>
+                                    </div>
+                                {% elif req.status == 'C'%}
+                                    <div class="d-grid gap-2">
+                                        <a href="{% url 'updateFull' req.id %}" class="btn btn-outline-success btn-lg">Deliver All</a>
+                                    </div>
+                                {% elif req.status == 'D'%}
+                                    <p style="color: seagreen;" class="text-center">This Order is complete and delivered</p>
+                                {% else  %}
+                                    <p style="color: red;" class="text-center">Cant supply Customer demand</p>
+                                    <div class="d-grid gap-2 ">
+                                        <button type="submit " class="btn btn-outline-primary btn-lg" disabled>Accept</button>
+                                    </div>
+                                {% endif %}
+                            </div>
                         </div>
-                    </div>
+
+                        {% if req.status == 'B' or req.status == 'C' %}
+                            <div class="card mt-3">
+                                <div class="card-body">
+                                    <h4 class="card-title">Add Material</h4>
+                                    <form method="post" autocomplete="off">
+                                        {% csrf_token %}
+                                        {{form.raw.errors}}
+                                        <div class="input-group mb-3">
+                                            <span class="input-group-text" id="inputGroup-sizing-default">Raw:</span>
+                                            {{ form.raw }}
+                                        </div>
+                                        {{form.quantity_needed.errors}}
+                                        <div class="input-group mb-3">
+                                            <span class="input-group-text" id="inputGroup-sizing-default">Quantity:</span>
+                                            {{ form.quantity_needed }}
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="d-grid gap-2 ">
+                                                <button type="submit " class="btn btn-primary btn-block btn-lg">Submit</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        {% endif %}
                     {% endif %}
                 </div>
-                <div class="col-sm-9">
+                <div class="col-sm-7">
                     <div class="container">
                         <div class="row">
                             <div class="card">
@@ -94,6 +120,41 @@
                                         <p> <b>Current Status:</b>  Delivered</p>
                                         <hr>
                                     {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-1">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h3 class="card-title">Materials Used</h3>
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Material</th>
+                                                <th>Batch</th>
+                                                <th>Quantity</th>
+                                                {%if req.status == 'B' or req.status == 'C'%}
+                                                <th>Action</th>
+                                                {% endif %}
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for mat in mats %}
+                                            <tr>
+                                                <td>{{mat.raw.tp.name}}</td>
+                                                <td>{{mat.raw.batch_name}}</td>
+                                                <td>{{mat.quantity_needed}}</td>
+                                                {%if req.status == 'B' or req.status == 'C'%}
+                                                <td>
+                                                    <div class="d-grid gap-2 ">
+                                                        <a href="{% url 'revert' mat.id %}" class="btn btn-danger">Revert</a>
+                                                    </div>
+                                                </td>
+                                                {% endif %}
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                         </div>

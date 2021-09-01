@@ -3,6 +3,7 @@ from django.db import models
 # Create your models here.
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 from django.conf import settings
+from django.db.models.fields import AutoField
 from django.db.models.fields.related import ForeignKey
 
 #Custom User Model
@@ -92,6 +93,8 @@ class Product(models.Model):
     def __str__(self):
         return self.name
 
+
+
 class Requesition(models.Model):
 
     class Status(models.TextChoices):
@@ -112,3 +115,26 @@ class Requesition(models.Model):
 
     def __str__(self):
         return self.Control_Number
+
+class RawMaterial(models.Model):
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=50, unique=True)
+
+    def __str__(self):
+        return self.name
+
+class RawBatch(models.Model):
+    id = models.AutoField(primary_key=True)
+    tp = models.ForeignKey(RawMaterial, on_delete=models.CASCADE)
+    batch_name = models.CharField(max_length=50)
+    date_created = models.DateField(auto_now=True)
+    quantity = models.IntegerField()
+
+    def __str__(self):
+        return 'Type: {} - Batch Name: {} - Quantity: {}'.format(self.tp.name, self.batch_name,self.quantity)
+
+class ReqToRaw(models.Model):
+    id = models.AutoField(primary_key=True)
+    raw = models.ForeignKey(RawBatch, on_delete=models.CASCADE)
+    req = models.ForeignKey(Requesition, on_delete=models.CASCADE)
+    quantity_needed = models.IntegerField()

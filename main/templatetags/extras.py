@@ -3,7 +3,7 @@ from django import template
 
 register = template.Library()
 
-from ..models import Requesition
+from ..models import Requesition, RawBatch
 
 @register.filter
 def calc(id):
@@ -43,3 +43,16 @@ def checkStorage(id):
         return False
     else:
         return True
+
+@register.filter
+def countBatches(id):
+    batch_count = RawBatch.objects.filter(tp=id).count()
+    return batch_count
+
+@register.filter
+def countWhole(id):
+    total = 0
+    batches = RawBatch.objects.filter(tp=id)
+    for batch in batches:
+        total += batch.quantity
+    return total

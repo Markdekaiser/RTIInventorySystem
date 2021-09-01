@@ -14,13 +14,16 @@ urlpatterns = [
     path('order/accepted', views.accepted, name="accepted"),
     path('order/partial', views.partial, name="partial"),
     path('order/delivered', views.delivered, name="delivered"),
-
     path('order/details/<str:id>', views.details, name="details"),
     path('order/accept/<str:id>', views.acceptOrder, name="acceptOrder"),
     path('order/updatePart/<str:id>', views.updatePart, name="updatePart"),
     path('order/updateFull/<str:id>', views.updateFull, name="updateFull"),
 
     path('products', views.productView, name="products"),
+
+    path('raw', views.raw, name="raw"),
+    path('raw/detials/<str:id>', views.rawDetails, name="rawDetails"),
+    path('raw/revert/<str:id>', views.revert, name="revert"),
 
     #For Authentication
     path('login/', views.loginView, name="login"),

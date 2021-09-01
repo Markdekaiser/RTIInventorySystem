@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.admin import widgets
-from .models import Requesition, Product, Customer
+from django.db.models import fields
+from .models import Requesition, Product, Customer,ReqToRaw,RawBatch
 
 class RequestForm(forms.ModelForm):
     class Meta:
@@ -16,6 +17,20 @@ class RequestForm(forms.ModelForm):
             f.widget.attrs['class'] = 'form-control input-lg'
             f.widget.attrs['aria-describedby'] = 'inputGroup-sizing-default'
 
+class ReqToRawForm(forms.ModelForm):
+    class Meta: 
+        model = ReqToRaw
+        fields = '__all__'
+        exclude = [
+            'req'
+        ]
+
+    def __init__(self, *args, **kwargs):
+        super(ReqToRawForm, self).__init__(*args, **kwargs)
+        for fname,f in self.fields.items():
+            f.widget.attrs['class'] = 'form-control input-lg'
+            f.widget.attrs['aria-describedby'] = 'inputGroup-sizing-default'
+        self.fields['raw'].queryset = RawBatch.objects.order_by('date_created','quantity')
 
 class ProductForm(forms.ModelForm):
     class Meta:

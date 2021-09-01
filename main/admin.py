@@ -7,11 +7,40 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.contrib.auth import get_user_model
 
-from .models import Employee, Customer, Product, Requesition, Section
+from .models import Employee, Customer, Product, Requesition, Section,RawMaterial,RawBatch
 
 admin.site.site_header = 'Inventory System'
 admin.site.site_title = 'Inventory System Admin Panel'
 admin.site.index_title = 'Welcome to Inventory System Admin'
+
+@admin.register(RawMaterial)
+class RMAdmin(admin.ModelAdmin):
+    list_display = [
+        'name'
+    ]
+    fields = [
+        'name',
+    ]
+    search_fields = [
+        'name'
+    ]
+
+@admin.register(RawBatch)
+class RBAdmin(admin.ModelAdmin):
+    list_display = [
+        'tp',
+        'batch_name',
+        'date_created',
+        'quantity'
+    ]
+    fields = [
+        'tp',
+        'batch_name',
+        'quantity'
+    ]
+    search_fields = [
+        'batch_name',
+    ]    
 
 @admin.register(Section)
 class SectionAdmin(admin.ModelAdmin):

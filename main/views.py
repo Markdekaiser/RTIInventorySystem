@@ -9,11 +9,11 @@ from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.forms import inlineformset_factory
 
-from .forms import RequestForm, ProductForm, CustomerForm 
+from .forms import RequestForm, ProductForm, CustomerForm,ReqToRawForm
 
 from .admin import UserCreationform, UserChangeForm
 
-from .models import Customer, Product, Requesition   
+from .models import Customer, Product, RawBatch, ReqToRaw, Requesition, RawMaterial
 
 # Create your views here.
 def loginView(request):
@@ -199,9 +199,35 @@ def delivered(request):
 @login_required(login_url='/login/')
 def details(request, id):
     req = Requesition.objects.get(id=id)
-    context = {'req':req}
+    mats = ReqToRaw.objects.filter(req=id)
+    form = ReqToRawForm()
+    if request.method == 'POST':
+        form = ReqToRawForm(request.POST)
+        if form.is_valid():
+            clean_form = form.cleaned_data
+            clean_form = form.save(commit=False)
+            batch = RawBatch.objects.get(id=clean_form.raw.id)
+            num = batch.quantity - clean_form.quantity_needed
+            batch.quantity = num
+            batch.save()
+            clean_form.req = req
+            clean_form.save()
+            return HttpResponseRedirect('/order/details/'+id)
 
+    context = {'req':req, 'form':form,'mats':mats}
     return render(request, 'main/details.html',context)
+
+@login_required(login_url='/login/')
+def revert(request,id):
+    mat = ReqToRaw.objects.get(id=id)
+    batch = RawBatch.objects.get(id=mat.raw.id)
+    num = batch.quantity + mat.quantity_needed
+    rev_id = mat.req.id
+    batch.quantity = num
+    batch.save()
+    mat.delete()
+    return HttpResponseRedirect('/order/details/'+str(rev_id))
+
 
 @login_required(login_url='/login/')
 def productView(request):
@@ -267,3 +293,19 @@ def updateFull(request,id):
     req.status = 'D'
     req.save()
     return HttpResponseRedirect('/order/details/'+id)
+
+@login_required(login_url='/login/')
+def raw(request):
+    raws = RawMaterial.objects.all()
+    context = {'raws':raws}
+    return render(request, 'main/RawMaterials.html',context)
+
+@login_required(login_url='/login/')
+def rawDetails(request, id):
+    raw = RawMaterial.objects.get(id=id)
+    batches = RawBatch.objects.filter(tp=raw.id).order_by('date_created','-quantity')
+    paginator = Paginator(batches, 20)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    context = {'raw':raw,'batches':page_obj}
+    return render(request, 'main/rawDetails.html',context)
